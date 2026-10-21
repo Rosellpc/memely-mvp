@@ -1,28 +1,10 @@
-PROJECT: Memely.ia
+# Memely MVP
 
-Tipo:
-Plataforma tecnológica + alimentos
+Base local para aprender Docker avanzado con una aplicación funcional.
+Stack: HTML/CSS/JS, Flask, SQLAlchemy, Psycopg, PostgreSQL 17 y Alembic.
+SQLite es legado y no se usa; sus archivos se conservan sin importar datos.
 
-Objetivo:
-Crear dietas personalizadas mediante inteligencia artificial
-para optimizar la eficiencia biológica humana.
-
-Interfaces MVP:
-
-1 Registro de usuario
-2 Perfil físico
-3 Generador de dieta
-4 Menú semanal
-
-Tecnologías:
-
-Frontend
-HTML
-CSS
-JavaScript
-
-Backend
-Python
-
-Database
-SQLite
+Flujo: cuenta → perfil → medidas y menús de ejemplo → seguimiento.
+Sin IA ni recomendaciones nutricionales personalizadas.
+Consultar README y docs/arquitectura.md para el estado implementado;
+los documentos de visión originales describen aspiraciones históricas.

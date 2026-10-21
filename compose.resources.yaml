@@ -1,0 +1,8 @@
+services:
+  web:
+    cpus: 1.0
+    mem_limit: 384m
+
+  db:
+    cpus: 1.0
+    mem_limit: 512m

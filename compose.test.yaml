@@ -1,0 +1,27 @@
+# Standalone test stack. Never merges with compose.yaml or uses its volumes.
+services:
+  test-db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: memely
+      POSTGRES_PASSWORD: test-only-password
+      POSTGRES_DB: memely_test
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memely -d memely_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  test:
+    build:
+      context: .
+      target: test
+    environment:
+      SECRET_KEY: test-secret-not-used-outside-tests-123456789
+      DATABASE_URL: postgresql+psycopg://memely:test-only-password@test-db:5432/memely_test
+      TEST_DATABASE_URL: postgresql+psycopg://memely:test-only-password@test-db:5432/memely_test
+    depends_on:
+      test-db:
+        condition: service_healthy
+    command: ["sh", "-c", "alembic upgrade head && python -m pytest -q -p no:cacheprovider && alembic check"]

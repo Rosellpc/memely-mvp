@@ -1,0 +1,16 @@
+services:
+  web:
+    command: ["flask", "--app", "backend.app:create_app", "run", "--host=0.0.0.0", "--port=8000", "--debug"]
+    volumes:
+      - ./backend:/app/backend:ro
+      - ./css:/app/css:ro
+      - ./js:/app/js:ro
+      - ./index.html:/app/index.html:ro
+      - ./migrations:/app/migrations
+      - ./alembic.ini:/app/alembic.ini:ro
+    restart: "no"
+  migrate:
+    volumes:
+      - ./backend:/app/backend:ro
+      - ./migrations:/app/migrations:ro
+      - ./alembic.ini:/app/alembic.ini:ro

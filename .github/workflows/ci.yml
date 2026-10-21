@@ -1,0 +1,20 @@
+name: Validate application
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check frontend
+        run: node --check js/app.js
+      - name: PostgreSQL integration and schema checks
+        run: docker compose -p memely-test -f compose.test.yaml up --build --abort-on-container-exit --exit-code-from test
+      - name: Cleanup test stack
+        if: always()
+        run: docker compose -p memely-test -f compose.test.yaml down -v
+      - name: Build runtime image
+        run: docker build --target runtime -t memely:ci .

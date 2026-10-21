@@ -1,0 +1,70 @@
+x-app-environment: &app-environment
+  SECRET_KEY: ${SECRET_KEY:?Define SECRET_KEY en .env}
+  COOKIE_SECURE: ${COOKIE_SECURE:-false}
+  POSTGRES_USER: ${POSTGRES_USER:?Define POSTGRES_USER en .env}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
+  POSTGRES_DB: ${POSTGRES_DB:?Define POSTGRES_DB en .env}
+  POSTGRES_HOST: db
+
+x-app: &app
+  image: memely-app:${IMAGE_TAG:-local}
+  build:
+    context: .
+    target: runtime
+  environment: *app-environment
+  init: true
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+
+services:
+  web:
+    <<: *app
+    ports:
+      - "127.0.0.1:${MEMELY_PORT:-8080}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4)"]
+      interval: 15s
+      timeout: 6s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  migrate:
+    <<: *app
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Define POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB:?Define POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  # Retained so the previous SQLite volume is not removed accidentally.
+  # No current service reads or writes it.
+  memely_data:

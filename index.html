@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Tu espacio para registrar medidas y organizar menús semanales de ejemplo.">
-  <title>Memely · Tu bienestar, con perspectiva</title>
+  <title>Memely · Tu espacio, a tu ritmo</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/css/styles.css">
   <script src="/js/app.js" defer></script>
@@ -21,18 +21,55 @@
     </div></div>
   </section>
   <div id="application" class="app-shell" hidden>
-    <aside class="sidebar"><a class="brand" href="/">memely<span>✳</span></a><p class="sidebar-caption">TU ESPACIO PERSONAL</p><nav aria-label="Principal"><button type="button" data-view="overview" aria-current="page"><span aria-hidden="true">◫</span> Resumen</button><button type="button" data-view="profile"><span aria-hidden="true">○</span> Mi perfil</button><button type="button" data-view="measurements"><span aria-hidden="true">↗</span> Mis medidas</button><button type="button" data-view="plans"><span aria-hidden="true">▦</span> Menú semanal</button></nav><div class="sidebar-note"><span>✳</span><p>Los hábitos se construyen<br>un día a la vez.</p></div><div class="sidebar-bottom"><span class="avatar" id="avatar">M</span><div><strong id="sidebar-name"></strong><small>Mi cuenta</small></div><button id="logout" type="button" aria-label="Cerrar sesión" title="Cerrar sesión">↪</button></div></aside>
-    <div class="app-content"><header class="topbar"><span id="breadcrumb">Mi espacio / Resumen</span><span class="today" id="today"></span></header>
+    <aside class="sidebar" aria-label="Accesos rápidos"><nav class="rail-nav" aria-label="Accesos rápidos"><button type="button" data-view="overview" aria-label="Ir a resumen" title="Resumen" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></button><button type="button" data-view="profile" aria-label="Ir a perfil" title="Perfil"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></button><button type="button" data-view="measurements" aria-label="Ir a medidas" title="Medidas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 3 8-10M15 4h6v6"/><path d="M3 22h18"/></svg></button><button type="button" data-view="plans" aria-label="Ir a menú semanal" title="Menú semanal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 2v6M16 2v6M7 14h3M14 14h3M7 18h3"/></svg></button></nav></aside>
+    <div class="app-content"><header class="topbar">
+        <a class="header-identity" href="/" aria-label="Memely, inicio"><span class="brand">memely<span>✳</span></span><span class="brand-caption">UN DÍA A LA VEZ</span></a>
+        <nav class="top-tabs" aria-label="Principal">
+          <button type="button" data-view="overview" aria-current="page">Resumen</button>
+          <button type="button" data-view="profile">Mi perfil</button>
+          <button type="button" data-view="measurements">Mis medidas</button>
+          <button type="button" data-view="plans">Menú semanal</button>
+        </nav>
+        <div class="sidebar-bottom"><span class="avatar" id="avatar">M</span><div><strong id="sidebar-name"></strong><small>Tu espacio personal</small></div><button id="logout" type="button" aria-label="Cerrar sesión" title="Cerrar sesión">↪</button></div>
+      </header>
       <main id="main" tabindex="-1">
-        <section data-panel="overview"><div class="page-heading"><div><p class="eyebrow">CADA PEQUEÑO PASO CUENTA</p><h1 id="greeting">Hola.</h1><p class="muted">Una mirada a tu semana y a lo que has registrado.</p></div><span class="pill">Tu espacio, a tu ritmo</span></div>
-          <div class="metrics"><article><span class="metric-icon">↗</span><p>Último peso</p><strong id="metric-weight">—</strong><small>Registro personal en kg</small></article><article><span class="metric-icon">↕</span><p>Estatura registrada</p><strong id="metric-height">—</strong><small>Última medición en cm</small></article><article><span class="metric-icon">○</span><p>Edad</p><strong id="metric-age">—</strong><small>Calculada desde tu perfil</small></article><article><span class="metric-icon">▦</span><p>Semanas organizadas</p><strong id="metric-plans">0</strong><small>Planes de ejemplo guardados</small></article></div>
-          <div class="overview-grid"><article class="card next-step"><p class="eyebrow">TU SIGUIENTE PASO</p><h2 id="next-title">Un buen comienzo.</h2><p id="next-description"></p><button class="primary" id="next-action" type="button">Completar perfil ↗</button><span class="decorative" aria-hidden="true">✳</span></article><article class="card"><div class="card-heading"><h2>Tu última semana</h2><span class="pill subtle">MENÚ DE EJEMPLO</span></div><div id="latest-summary" class="summary-empty">Todavía no has creado un menú.</div><button class="text-button" type="button" data-view="plans">Ir a mis menús →</button></article></div>
-          <div class="info-strip"><span aria-hidden="true">ⓘ</span><p>Memely te ayuda a organizar y registrar. No calcula dietas, diagnósticos ni objetivos de peso.</p></div>
+        <div class="workspace-meta"><span id="breadcrumb">Mi espacio / Resumen</span><span class="today"><span class="live-dot" aria-hidden="true"></span><span id="today"></span></span></div>
+        <section data-panel="overview">
+          <div class="overview-top">
+            <div class="page-heading"><div><p class="eyebrow">BIENESTAR CON PERSPECTIVA</p><h1 id="greeting">Hola.</h1><p class="muted">Un espacio para ti.<br>Una semana a tu ritmo.</p></div></div>
+            <div class="metrics">
+              <article><span class="metric-icon" aria-hidden="true">↗</span><p>Último peso</p><strong id="metric-weight">—</strong><small>Kilogramos registrados</small></article>
+              <article><span class="metric-icon" aria-hidden="true">↕</span><p>Estatura</p><strong id="metric-height">—</strong><small>Centímetros registrados</small></article>
+              <article><span class="metric-icon" aria-hidden="true">○</span><p>Edad</p><strong id="metric-age">—</strong><small>Años, desde tu perfil</small></article>
+              <article><span class="metric-icon" aria-hidden="true">▦</span><p>Mis semanas</p><strong id="metric-plans">0</strong><small>Menús de ejemplo</small></article>
+            </div>
+          </div>
+          <div class="overview-grid">
+            <article class="card weekly-card">
+              <div class="card-heading"><div><p class="eyebrow">PEQUEÑOS HÁBITOS, CADA DÍA</p><h2>Una semana,<br>más tuya.</h2></div><span class="round-mark" aria-hidden="true">✳</span></div>
+              <div class="week-focus">
+                <div class="completion-ring">
+                  <svg id="week-ring-chart" viewBox="0 0 128 128" role="img" aria-label="Seguimiento semanal: sin menú">
+                    <circle class="ring-track" cx="64" cy="64" r="53"/>
+                    <circle id="week-ring-fill" class="ring-fill" cx="64" cy="64" r="53" pathLength="100" stroke-dasharray="0 100" stroke-opacity="0"/>
+                  </svg>
+                  <div class="ring-value" aria-hidden="true"><strong id="week-percent">—</strong><span>de tu menú</span></div>
+                </div>
+                <div><h3 id="week-focus-title">Tu próxima semana.</h3><p id="week-focus-description">Organiza tus comidas y consulta tu seguimiento en un solo lugar.</p></div>
+              </div>
+              <div id="week-strip" class="week-strip" aria-label="Seguimiento por día"></div>
+              <p id="week-caption" class="week-caption">Crea un menú para empezar tu seguimiento.</p>
+              <button class="text-button" type="button" data-view="plans">Explorar mi semana ↗</button>
+            </article>
+            <article class="card next-step"><p class="eyebrow">TU SIGUIENTE PASO</p><h2 id="next-title">Un buen comienzo.</h2><p id="next-description"></p><button class="primary" id="next-action" type="button">Completar perfil ↗</button><span class="decorative" aria-hidden="true">✳</span></article>
+            <article class="card latest-card"><div class="card-heading"><h2>Tu último menú</h2><span class="pill subtle">GUARDADO PARA TI</span></div><div id="latest-summary" class="summary-empty">Todavía no has creado un menú.</div><button class="text-button" type="button" data-view="plans">Ver mis menús →</button></article>
+          </div>
+          <div class="info-strip"><span aria-hidden="true">ⓘ</span><p>Tu registro personal y tus ideas de comidas, en un mismo lugar. Los menús son ejemplos, no dietas personalizadas.</p></div>
         </section>
         <section data-panel="profile" hidden><div class="page-heading"><div><p class="eyebrow">TUS DATOS, BIEN ORGANIZADOS</p><h1>Mi perfil</h1><p class="muted">Actualiza tu información y tus preferencias de menú.</p></div></div><div class="form-layout"><article class="card"><form id="profile-form"><div class="form-grid"><div><label for="birth-date">Fecha de nacimiento</label><input id="birth-date" name="fecha_nacimiento" type="date" min="1900-01-01" required></div><div><label for="sex">Sexo registrado <span class="optional">opcional</span></label><select id="sex" name="sexo_registrado"><option value="no_indicado">Prefiero no indicarlo</option><option value="femenino">Femenino</option><option value="masculino">Masculino</option><option value="intersexual">Intersexual</option></select></div><div><label for="activity">Actividad física</label><select id="activity" name="actividad"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select></div><div><label for="preference">Preferencia de menú</label><select id="preference" name="preferencia"><option value="balanced">Variado</option><option value="vegetarian">Vegetariano</option></select></div></div><p class="field-help">El menú vegetariano incluye huevo y lácteos. Las medidas se registran por separado para conservar su historial.</p><button class="primary" type="submit">Guardar perfil</button></form></article><aside class="card quiet-card"><span class="large-symbol">○</span><h2>Un perfil que evoluciona contigo.</h2><p>Tu edad se calcula a partir de tu fecha de nacimiento. No necesitas actualizarla cada año.</p><p>La fecha de nacimiento y el sexo no se usan para generar recomendaciones médicas.</p></aside></div></section>
         <section data-panel="measurements" hidden><div class="page-heading"><div><p class="eyebrow">HISTORIAL, SIN JUICIOS</p><h1>Mis medidas</h1><p class="muted">Cada registro conserva su fecha. Los anteriores permanecen en tu historial.</p></div></div><article class="card"><h2>Agregar una medición</h2><form id="measurement-form" class="inline-form"><div><label for="weight">Peso (kg)</label><input id="weight" name="peso_kg" type="number" step="0.01" min="0.01" max="9999.99" placeholder="Ej. 68.50" required></div><div><label for="height">Estatura (cm)</label><input id="height" name="estatura_cm" type="number" step="0.01" min="0.01" max="999.99" placeholder="Ej. 172.00" required></div><button class="primary" type="submit">Guardar medición +</button></form></article><article class="card history-card"><div class="card-heading"><h2>Tu historial</h2><span class="pill subtle" id="measurement-count">0 registros</span></div><div class="table-scroll"><table><caption class="sr-only">Historial de peso y estatura</caption><thead><tr><th>Fecha de registro</th><th>Peso (kg)</th><th>Estatura (cm)</th><th><span class="sr-only">Acciones</span></th></tr></thead><tbody id="measurement-rows"></tbody></table></div><p id="measurement-empty" class="summary-empty">Tu primera medición aparecerá aquí.</p><div class="pagination"><button type="button" id="measure-prev" class="secondary">← Anterior</button><span id="measure-page"></span><button type="button" id="measure-next" class="secondary">Siguiente →</button></div></article></section>
         <section data-panel="plans" hidden><div class="page-heading"><div><p class="eyebrow">UN POCO DE ORDEN PARA TU SEMANA</p><h1>Menú semanal</h1><p class="muted">Crea ideas de comidas y marca las que hayas realizado.</p></div></div><article class="card"><form id="plan-form" class="inline-form"><div><label for="plan-name">Nombre del plan</label><input id="plan-name" name="nombre" minlength="2" maxlength="100" value="Mi semana" required></div><div><label for="plan-start">Lunes de inicio</label><input id="plan-start" name="fecha_inicio" type="date" required></div><button class="primary" type="submit">Crear menú ↗</button></form><p id="plan-requirement" class="field-help"></p></article><div class="plan-layout"><aside class="card plan-history"><h2>Mis semanas</h2><div id="plan-list"></div><div class="pagination"><button type="button" id="plans-prev" class="secondary" aria-label="Planes anteriores">←</button><span id="plans-page"></span><button type="button" id="plans-next" class="secondary" aria-label="Planes siguientes">→</button></div></aside><div><div id="plan-detail-heading" class="detail-heading"></div><div id="plan-days" class="days"><div class="empty-state"><span>▦</span><h2>Tu semana empieza aquí.</h2><p>Completa tu perfil y crea tu primer menú.</p></div></div></div></div><p class="disclaimer">Menús de ejemplo sin porciones ni evaluación nutricional. No se adaptan a alergias, condiciones de salud, peso o estatura. La opción vegetariana incluye huevo y lácteos.</p></section>
-      </main><footer>Memely · Un día a la vez.<span>PROYECTO DE PRÁCTICA · SIN IA</span></footer>
+      </main><footer>Memely · Un día a la vez.<span>MEMELY · TU ESPACIO PERSONAL</span></footer>
     </div>
   </div>
   <noscript>Activa JavaScript para usar los formularios de Memely.</noscript>

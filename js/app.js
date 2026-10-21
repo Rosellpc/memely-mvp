@@ -70,6 +70,7 @@ function showWelcome() {
   state.plans = [];
   state.measurements = [];
   state.latestMeasurement = null;
+  $('.skip-link').href = '#auth-form';
   $('#application').hidden = true;
   $('#loading').hidden = true;
   $('#welcome').hidden = false;
@@ -154,11 +155,45 @@ async function loadWorkspace() {
   updatePlanRequirement();
   $('#welcome').hidden = true;
   $('#loading').hidden = true;
+  $('.skip-link').href = '#main';
   $('#application').hidden = false;
   showView('overview', false);
 }
 
+function renderWeeklyOverview() {
+  const plan = state.latest;
+  const meals = plan ? plan.days.flatMap((day) => day.meals) : [];
+  const completed = meals.filter((meal) => meal.completed).length;
+  const percent = meals.length ? Math.round(completed / meals.length * 100) : 0;
+  $('#week-percent').textContent = plan ? `${percent}%` : '—';
+  $('#week-ring-fill').setAttribute('stroke-dasharray', `${percent} 100`);
+  $('#week-ring-fill').setAttribute('stroke-opacity', completed ? '1' : '0');
+  $('#week-ring-chart').setAttribute('aria-label', plan
+    ? `${completed} de ${meals.length} comidas realizadas (${percent}%)` : 'Seguimiento semanal: sin menú');
+  $('#week-focus-title').textContent = plan ? 'Tu semana en marcha.' : 'Tu próxima semana.';
+  $('#week-focus-description').textContent = plan
+    ? `${completed} de ${meals.length} comidas marcadas. Cada pequeño paso tiene su lugar.`
+    : 'Organiza tus comidas y consulta tu seguimiento en un solo lugar.';
+  const strip = $('#week-strip');
+  strip.replaceChildren();
+  const labels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  labels.forEach((label, index) => {
+    const day = plan?.days[index];
+    const done = day ? day.meals.filter((meal) => meal.completed).length : 0;
+    const cell = node('div', `mini-day${done ? ' has-completion' : ''}`);
+    const dayNumber = day ? String(new Date(`${day.date}T12:00:00`).getDate()).padStart(2, '0') : '—';
+    cell.setAttribute('aria-label', day ? `${day.day}: ${done} de ${day.meals.length} comidas realizadas` : `${label}: sin menú`);
+    cell.append(node('span', '', label), node('strong', '', dayNumber),
+      node('small', '', day ? `${done}/${day.meals.length}` : 'sin plan'));
+    strip.append(cell);
+  });
+  $('#week-caption').textContent = plan
+    ? `Semana del ${dateLabel(plan.fecha_inicio)} · Tus marcas se guardan automáticamente.`
+    : 'Crea un menú para empezar tu seguimiento.';
+}
+
 function renderOverview() {
+  renderWeeklyOverview();
   const latest = state.latestMeasurement || state.measurements[0];
   $('#metric-weight').textContent = latest ? Number(latest.peso_kg).toLocaleString('es', { maximumFractionDigits: 2 }) : '—';
   $('#metric-height').textContent = latest ? Number(latest.estatura_cm).toLocaleString('es', { maximumFractionDigits: 2 }) : '—';

@@ -13,3 +13,5 @@ cookies*.txt
 test-results/
 playwright-report/
 node_modules/
+.secrets/
+.certs/

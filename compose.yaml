@@ -26,11 +26,17 @@ services:
     <<: *app
     ports:
       - "127.0.0.1:${MEMELY_PORT:-8080}:8000"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     depends_on:
       db:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
+
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=4)"]
       interval: 15s
@@ -47,12 +53,27 @@ services:
         condition: service_healthy
     restart: "no"
 
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   db:
     image: postgres:17
+    secrets:
+      - postgres_password
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?Define POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB:?Define POSTGRES_DB}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -62,6 +83,9 @@ services:
       retries: 10
       start_period: 10s
     restart: unless-stopped
+secrets:
+  postgres_password:
+    file: ./.secrets/postgres_password.txt
 
 volumes:
   postgres_data:

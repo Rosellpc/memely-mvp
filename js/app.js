@@ -393,3 +393,6 @@ async function initialize() {
   }
 }
 initialize();
+
+// Prueba temporal: error de sintaxis deliberado
+const ciFailureDemo = ;

@@ -1,20 +1,50 @@
 name: Validate application
+
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   integration:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Syntax check frontend
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Comprobar sintaxis de JavaScript
         run: node --check js/app.js
-      - name: PostgreSQL integration and schema checks
-        run: docker compose -p memely-test -f compose.test.yaml up --build --abort-on-container-exit --exit-code-from test
-      - name: Cleanup test stack
+
+      - name: Ejecutar pruebas Alpine y validar esquema
+        run: |
+          docker compose -p memely-test \
+            -f compose.test.yaml \
+            -f compose.test.alpine.yaml \
+            up --build --abort-on-container-exit --exit-code-from test
+
+      - name: Construir imagen de ejecución Alpine
+        run: |
+          docker build \
+            -f Dockerfile.alpine \
+            --target runtime \
+            -t memely:ci \
+            .
+
+      - name: Limpiar entorno de pruebas
         if: always()
-        run: docker compose -p memely-test -f compose.test.yaml down -v
-      - name: Build runtime image
-        run: docker build --target runtime -t memely:ci .
+        run: |
+          docker compose -p memely-test \
+            -f compose.test.yaml \
+            -f compose.test.alpine.yaml \
+            down -v

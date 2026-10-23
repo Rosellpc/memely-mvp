@@ -1,0 +1,6 @@
+services:
+  test:
+    platform: linux/arm64
+
+  test-db:
+    platform: linux/arm64

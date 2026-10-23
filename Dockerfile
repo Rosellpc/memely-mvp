@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
-FROM python:3.13-slim AS wheels
+FROM python:3.15.1-slim@sha256:08275f764e022331c6d3e3ca55d8cce01fa4684b02111adf0445d71806fe7941 AS wheels
 WORKDIR /build
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip pip wheel --wheel-dir=/wheels -r requirements.txt
 
-FROM python:3.13-slim AS runtime
+FROM python:3.15.1-slim@sha256:08275f764e022331c6d3e3ca55d8cce01fa4684b02111adf0445d71806fe7941 AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY requirements.txt .
@@ -26,3 +26,9 @@ USER memely
 CMD ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider"]
 
 FROM runtime AS production
+USER root
+
+RUN python -m pip uninstall -y pip \
+    && python -c "import shutil, sysconfig; from pathlib import Path; shutil.rmtree(Path(sysconfig.get_path('stdlib')) / 'ensurepip')"
+
+USER memely

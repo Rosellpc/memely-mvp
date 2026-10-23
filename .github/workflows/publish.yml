@@ -1,0 +1,83 @@
+name: Publish image
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Validar versión y procedencia
+        shell: bash
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Usa un tag como v1.1.1"
+            exit 1
+          fi
+
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          echo "IMAGE_TAG=${GITHUB_REF_NAME#v}-alpine" >> "$GITHUB_ENV"
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Comprobar JavaScript
+        run: node --check js/app.js
+
+      - name: Ejecutar pruebas y validar esquema
+        run: |
+          docker compose -p memely-test \
+            -f compose.test.yaml \
+            -f compose.test.alpine.yaml \
+            up --build --abort-on-container-exit --exit-code-from test
+
+      - name: Construir imagen de ejecución
+        run: |
+          docker build \
+            -f Dockerfile.alpine \
+            --target runtime \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            -t "rosellpc/memely-app:$IMAGE_TAG" \
+            .
+
+      - name: Autenticar en Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          printf '%s' "$DOCKERHUB_TOKEN" |
+            docker login \
+              --username "$DOCKERHUB_USERNAME" \
+              --password-stdin
+
+      - name: Publicar imagen
+        run: docker push "rosellpc/memely-app:$IMAGE_TAG"
+
+      - name: Registrar digest
+        run: |
+          docker image inspect "rosellpc/memely-app:$IMAGE_TAG" \
+            --format '{{range .RepoDigests}}{{println .}}{{end}}' \
+            >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Limpiar entorno de pruebas
+        if: always()
+        run: |
+          docker compose -p memely-test \
+            -f compose.test.yaml \
+            -f compose.test.alpine.yaml \
+            down -v

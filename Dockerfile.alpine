@@ -1,10 +1,11 @@
 # syntax=docker/dockerfile:1
-FROM python:3.13-alpine@sha256:2d9aefe2fef018a7eb2c13064c89c71929800fd2e5dccdbf52ea5da5bb8d929a AS wheels
+FROM python:3.15.1-alpine3.23@sha256:cb295b554dbbea09b2c0e6e6d9ce55f051347c902fbb611e618c071addfb30a3 AS wheels
 WORKDIR /build
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip pip wheel --wheel-dir=/wheels -r requirements.txt
 
-FROM python:3.13-alpine@sha256:2d9aefe2fef018a7eb2c13064c89c71929800fd2e5dccdbf52ea5da5bb8d929a AS runtime
+FROM python:3.15.1-alpine3.23@sha256:cb295b554dbbea09b2c0e6e6d9ce55f051347c902fbb611e618c071addfb30a3 AS runtime
+RUN apk upgrade --no-cache musl musl-utils
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY requirements.txt .
@@ -28,3 +29,9 @@ USER memely
 CMD ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider"]
 
 FROM runtime AS production
+USER root
+
+RUN python -m pip uninstall -y pip \
+    && python -c "import shutil, sysconfig; from pathlib import Path; shutil.rmtree(Path(sysconfig.get_path('stdlib')) / 'ensurepip')"
+
+USER memely

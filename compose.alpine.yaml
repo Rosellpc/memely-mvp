@@ -3,10 +3,10 @@ services:
     image: memely-app:alpine
     build:
       dockerfile: Dockerfile.alpine
-      target: runtime
+      target: production
 
   migrate:
     image: memely-app:alpine
     build:
       dockerfile: Dockerfile.alpine
-      target: runtime
+      target: production

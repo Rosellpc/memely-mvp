@@ -110,3 +110,11 @@ integrada. Sus archivos originales se conservan como referencia histórica.
 
 Consulta [la arquitectura](docs/arquitectura.md), [la API](docs/api.md) y
 [el laboratorio Docker avanzado](docs/docker-avanzado.md).
+
+## Python y bases de contenedores
+
+El proyecto utiliza Python 3.15.1 (.python-version). Los Dockerfiles fijan las bases por digest: Debian Slim y Alpine 3.23. La variante Alpine utiliza musl 1.2.5-r24 o posterior, con la correccion de CVE-2026-107891. No se mezclan repositorios edge con estables.
+
+Las etapas test conservan pip; production elimina pip y ensurepip. Compose y los workflows construyen production. Actualizar .python-version no recrea un entorno virtual existente: con uv, crea uno nuevo con uv venv --python 3.15.1 .venv-py315 e instala requirements-dev.txt en ese entorno.
+
+Resultado de seguridad y limitaciones: [informe de validacion](docs/releases/python-3.15.1-security.md).

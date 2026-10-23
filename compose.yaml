@@ -10,7 +10,7 @@ x-app: &app
   image: memely-app:${IMAGE_TAG:-local}
   build:
     context: .
-    target: runtime
+    target: production
   environment: *app-environment
   init: true
   read_only: true

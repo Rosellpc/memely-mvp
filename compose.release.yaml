@@ -1,6 +1,6 @@
 services:
   web:
-    image: rosellpc/memely-app@sha256:6f290de52a6f40e4c8b2cf87413e883fc3e2de5120c571223989c181e319db3f
+    image: rosellpc/memely-app@sha256:4b7e56170ae8eab4cc923b3b9cb0174a8f7dfb378eee20246fe1605f54b8256a
 
   migrate:
-    image: rosellpc/memely-app@sha256:6f290de52a6f40e4c8b2cf87413e883fc3e2de5120c571223989c181e319db3f
+    image: rosellpc/memely-app@sha256:4b7e56170ae8eab4cc923b3b9cb0174a8f7dfb378eee20246fe1605f54b8256a
